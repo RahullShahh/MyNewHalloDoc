@@ -1,0 +1,440 @@
+﻿@model Scheduling
+@{
+    Layout = "_AdminDashboardLayout";
+}
+<style>
+    .fc-event-end .fc-event-time {
+        display: none;
+    }
+</style>
+<div class="container-fluid " style="height:80vh !important">
+    <div class="justify-content-between d-flex lg container-fluid mb-2 container my-3">
+        <div class="">
+            <h3 class="mt-2"> Scheduling </h3>
+        </div>
+        <div>
+            <a onclick="history.back()" class="btn btn-outline-info mt-2"> ❮  Back </a>
+        </div>
+    </div>
+
+    <div class="container shadow-lg p-3 my-3 rounded">
+        <div class="p-0 m-0 d-flex justify-content-between">
+            <div class="d-flex border border-secondary  rounded align-items-center my-2 col-3">
+                <select class="form-control shadow-none border-0" id="SelectedRegion" name="SelectedStateId">
+                    <option value="0">All</option>
+                    <option value="1">India</option>
+                    <option value="2">Switzerland</option>
+                    <option value="3">Netherlands</option>
+                    <option value="4">England</option>
+                    <option value="5">United States of America</option>
+                    <option value="6">Australia</option>
+                </select>
+            </div>
+            <div class="d-flex mr-0 py-2 justify-content-end">
+                <a asp-action="MdOnCall" asp-controller="Admin" class="btn btn-info text-light" id="providerBtn">
+                    Providers On Call
+                </a>
+                <a class="btn btn-info mx-2 text-light" asp-action="ReviewShift" asp-controller="Admin" id="adminBtn">
+                    Shift for review
+                </a>
+                <button class="btn btn-info text-light" data-bs-toggle="modal" data-bs-target="#createShiftModal" id="adminBtn">
+                    Add New Shift
+                </button>
+            </div>
+        </div>
+        <div id="calendarTitle" class="calendar-current-date fs-4 fw-bolder"></div>
+        <div class="m-0 pe-2 py-0 d-flex justify-content-end my-3">
+            <div class="m-0 p-0 text-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#e39de8" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="8" />
+                </svg>
+                <span class="text-body me-3">Pending Shifts</span>
+            </div>
+            <div class="m-0 p-0 text-success">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#32D97D" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="8" />
+                </svg>
+                <span class="text-body">Approved Shifts</span>
+            </div>
+        </div>
+        <div class="my-3 p-0 d-flex justify-content-between">
+            <div>
+                <button class="rounded-5 btn btn-info text-white me-3" onclick="calendar.prev()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                        <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+                    </svg>
+                </button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                </svg>
+                <button class="rounded-5 btn btn-info text-white ms-3" onclick="calendar.next()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                    </svg>
+                </button>
+            </div>
+            <div>
+                <button class="btn btn-info px-3 shadow-none text-light" onclick="calendar.changeView('resourceTimeline')">Day</button>
+                <button class="btn btn-info px-3 shadow-none text-light" onclick="calendar.changeView('resourceTimelineWeek')">Week</button>
+                <button class="btn btn-info px-3 shadow-none text-light" onclick="calendar.changeView('dayGridMonth')">Month</button>
+            </div>
+        </div>
+        <div id="calendar" ></div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js"></script>
+<script>
+
+    var calendar;
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var region = $('#SelectedRegion').val();
+        getPhysicianShift(region);
+
+        //write a function of the get physician
+        function getPhysicianShift(region) {
+            fetch('/Admin/GetPhysicianShift?region=' + region)
+                .then(response => response.json())
+                .then(data => {
+                    const resources = data.map(physician => ({
+                        id: physician.physicianid,
+                        title: physician.firstname,
+                    }));
+
+
+                    // Fetch events from the server
+                    fetch('/Admin/GetEvents?region=' + region)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data)
+                            const events = data.map(event => ({
+                                id: event.id,
+                                resourceId: event.resourceId,
+                                title: `${event.start.split("T")[1].substr(0, 5)} - ${event.end.split("T")[1].substr(0, 5)}: ${event.title}`,
+                                start: event.start,
+                                end: event.end,
+                                eventBackgroundColor: event.status === 1 ? '#32d97d' : '#e39de8',
+                                color: event.status === 1 ? '#e39de8' : '#32d97d',
+                                ShiftDetailId: event.shiftDetailId,
+                                region: event.region,
+                                status: event.status,
+                                allDay: false
+                            }));
+
+                            initializeCalendar(resources, events);
+                        })
+                        .catch(error => console.error(error));
+                })
+                .catch(error => console.error(error));
+        }
+
+
+        function initializeCalendar(resources, events) {
+            $('#SelectedRegion').on('change', function () {
+                const newRegion = $(this).val();
+                getPhysicianShift(newRegion);
+            });
+            console.log(resources)
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                height: '30rem',
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                themeSystem: 'bootstrap5',
+                headerToolbar: false,
+                initialView: 'dayGridMonth',
+                dayMaxEvents: 4,
+                editable: true,
+                views: {
+                    resourceTimelineDay: {
+                        buttonText: 'Day',
+                    },
+                    resourceTimelineWeek: {
+                        buttonText: 'Week',
+                        slotDuration: { days: 1 },
+                        slotLabelInterval: { days: 1 },
+                        slotMinTime: '00:00:00',
+                        slotMaxTime: '23:59:59',
+                        slotLabelFormat: {
+                            omitWeekday: false,
+                            weekday: 'short',
+                            day: '2-digit',
+                            omitCommas: true,
+                            meridiem: 'short'
+                        }
+                    },
+                    resourceTimelineMonth: {
+                        buttonText: 'Month',
+                        eventLimit: true, // Set the event limit to 3
+                        eventLimitText: "More"
+                    }
+                },
+
+
+                datesSet: function (info) {
+                    var title = info.view.title;
+                    $("#calendarTitle").html(title);
+                },
+                resources: resources,
+                events: events,
+                eventLimit: 3,
+                eventLimitText: "More",
+                eventClick: function (info) {
+                    // Open the modal when an event is clicked
+                    $('#eventModal').modal('show');
+                    $('#eventModal').on('click', '#editbtn', function () {
+                        // Hide the edit button
+                        $('#editbtn').addClass('d-none');
+                        // Show the save button
+                        $('#savebtn').removeClass('d-none');
+                        $('#StartDateView').prop('disabled', false);
+                        $('#StartTimeView').prop('disabled', false);
+                        $('#EndTimeView').prop('disabled', false);
+                    });
+
+
+                    $('#eventModal').on('click', '#returnshift', function () {
+                        // Get the ShiftDetailId from the event
+                        var shiftDetailId = $('#shiftDetailId').val(); // Assuming you have an input field with id 'shiftDetailId' in your modal
+                        // Call AJAX to return
+                        $.ajax({
+                            url: '/Admin/ReturnShift',
+                            type: 'POST',
+                            data: { shiftDetailId: shiftDetailId, region: region },
+                            success: function (response) {
+                                // Handle success
+                                $('#eventModal').modal('hide');
+
+                                const events = response.events.map(event => ({
+                                    id: event.id,
+                                    resourceId: event.resourceId,
+                                    title: `${event.start.split("T")[1].substr(0, 5)} - ${event.end.split("T")[1].substr(0, 5)}: ${event.title}`,
+                                    start: event.start,
+                                    end: event.end,
+                                    eventBackgroundColor: event.status == 1 ? '#e39de8' : '#32d97d',
+                                    color: event.status === 0 ? '#32d97d' : '#e39de8',
+                                    ShiftDetailId: event.shiftDetailId,
+                                    region: event.region
+                                }));
+                                calendar.removeAllEvents(); // Remove existing events
+                                calendar.addEventSource(events); // Add updated events
+                                calendar.refetchEvents(); // Refetch events from the event sources
+
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle error
+                            }
+                        });
+                    });
+
+                    $('#eventModal').on('click', '#deletebtn', function () {
+                        // Get the ShiftId from the event
+                        var shiftDetailId = $('#shiftDetailId').val();
+                        $.ajax({
+                            url: '/Admin/DeleteShift',
+                            type: 'POST',
+                            data: { shiftDetailId: shiftDetailId, region: region },
+                            success: function (response) {
+                                $('#eventModal').modal('hide');
+
+                                const events = response.events.map(event => ({
+                                    id: event.id,
+                                    resourceId: event.resourceId,
+                                    title: event.title,
+                                    start: event.start,
+                                    end: event.end,
+                                    eventBackgroundColor: event.status == 1 ? '#e39de8' : '#32d97d',
+                                    color: event.status === 0 ? '#32d97d' : '#e39de8',
+                                    ShiftDetailId: event.shiftDetailId,
+                                    region: event.region
+                                }));
+                                calendar.removeAllEvents(); // Remove existing events
+                                calendar.addEventSource(events); // Add updated events
+                                calendar.refetchEvents(); // Refetch events from the event sources
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle error
+                            }
+                        });
+                    });
+
+                    $('#eventModal').on('click', '#savebtn', function () {
+                        // Get data to be saved
+                        var shiftDetailId = $('#shiftDetailId').val(); // Assuming you have an input field with id 'shiftDetailId' in your modal
+                        var startDate = $('#StartDateView').val();
+                        var startTime = $('#StartTimeView').val();
+                        var endTime = $('#EndTimeView').val();
+                        console.log(shiftDetailId);
+                        // Call AJAX to save
+                        $.ajax({
+                            url: '/Admin/ChangeShift',
+                            type: 'POST',
+                            data: {
+                                shiftDetailId: shiftDetailId,
+                                startDate: startDate,
+                                startTime: startTime,
+                                endTime: endTime,
+                                region: region
+                            },
+                            success: function (response) {
+                                debugger
+                                $('#eventModal').modal('hide');
+
+                                const events = response.events.map(event => ({
+                                    id: event.id,
+                                    resourceId: event.resourceId,
+                                    title: event.title,
+                                    start: event.start,
+                                    end: event.end,
+                                    eventBackgroundColor: event.status == 0 ? '#e39de8' : '#32d97d',
+                                    color: event.status === 0 ? '#32d97d' : '#e39de8',
+                                    ShiftDetailId: event.shiftDetailId,
+                                    region: event.region
+                                }));
+                                calendar.removeAllEvents();
+                                calendar.addEventSource(events); // Add updated events
+                                calendar.refetchEvents(); // Refetch events from the event sources
+
+                                // Hide the save button and show the edit button
+                                $('#savebtn').addClass('d-none');
+                                $('#editbtn').removeClass('d-none');
+                            },
+                            error: function (xhr, status, error) {
+                                alert(error)
+                            }
+                        });
+                    });
+                    // Get the ShiftDetailId from the event's extendedProps
+                    var shiftDetailId = info.event.extendedProps.ShiftDetailId;
+                    var region = info.event.extendedProps.region;
+                    console.log(region)
+                    // Populate modal content with event details
+                    var event = info.event;
+                    var modalBody = document.querySelector('#eventModal .modal-body');
+                    var eventDetails = `
+                                            <form asp-action="viewshift">
+                                            <input class="d-none" id="shiftDetailId" value="${shiftDetailId}">
+                                               <div class="form-floating mb-3 mt-3">
+                                        <select class="form-control" aria-label="Default select example" id="selectregion" disabled>
+                                            <option value="">${region[0].name}</option>
+
+                                        </select>
+                                    </div>
+                                            <div class="form-floating mb-3 mt-3">
+                                                            <select class="form-select pt-1 physicianDropdown" asp-for="Physicianid" id="physicianSelect" aria-label="Default select example" disabled>
+                                                            <option value="" selected disabled>${event.title}</option>
+                                                        </select>
+                                                    </div>
+                                                            <div class="col-md-12 form-floating mb-3">
+                                            <input id="StartDateView" class="form-control rounded vcs" name="Startdate" type="date" placeholder="Suchtext" autocomplete="off" value="${formatDate(event.start)}" disabled>
+                                    <label for="StartDate">Shifted Date</label>
+                                    <div class="d-flex gap-2 mt-3">
+                                    <div class="col-md-6 form-floating mb-3">
+                                            <input id="StartTimeView" asp-for="Starttime" disabled class="form-control rounded vcs" name="Starttime" type="time" placeholder="Suchtext" autocomplete="off" value="${formatTime(event.start)}" >
+                                    <label for="StartTime">Start</label>
+                                </div>
+                                <div class="col-md-6 form-floating mb-3">
+                                            <input id="EndTimeView" asp-for="Endtime" disabled	 class="form-control rounded vcs" name="Endtime" type="time" placeholder="Suchtext" autocomplete="off" value="${formatTime(event.end)}" >
+                                    <label for="EndTime">End</label>
+                                </div>
+                                </div>
+                                    <div class="d-flex justify-content-end gap-2">
+                                <button class="btn btn-info" id="returnshift"  type="button">Return</button>
+                            <button class="btn btn-info" id="editbtn" type="button">Edit</button>
+                                <button class="btn btn-success d-none" id="savebtn"  type="button">Save</button>
+                            <button class="btn btn-danger" id="deletebtn" type="button">Delete</button>
+                        </div>
+                                </form>
+                                                `;
+                    modalBody.innerHTML = eventDetails;
+                },
+                eventBackgroundColor: function (event) {
+                    return event.eventBackgroundColor;
+                },
+                resourceLabelDidMount: function (resourceObj) {
+                    const img = document.createElement('img');
+                    const imgUrl = resourceObj.resource.extendedProps.imageUrl || `/Providers/${resourceObj.el.dataset.resourceId}/Photo.jpg`;
+                    img.src = imgUrl;
+                    console.log(imgUrl);
+                    img.style.maxHeight = '30px';
+                    img.style.marginLeft = "8px";
+                    resourceObj.el.querySelector('.fc-datagrid-cell-main').appendChild(img);
+                },
+
+
+                dateClick: function (info) {
+                    debugger
+                    var shiftedDateISO = info.dateStr;
+                    var shiftedDate = shiftedDateISO.split('T')[0];
+                    var startTime = new Date(info.date).toTimeString().substr(0, 5);
+
+
+                    $('#StartDate').val(shiftedDate);
+                    $('#StartTime').val(startTime);
+
+                    // Open the create shift modal
+                    $('#createShiftModal').modal('show');
+                },
+
+            });
+
+            $("#next-button").click(function () {
+                calendar.next();
+            });
+
+            $("#prev-button").click(function () {
+                calendar.prev();
+            });
+
+            $("#day-button").click(function () {
+                calendar.changeView('resourceTimelineDay');
+            });
+
+            $("#week-button").click(function () {
+                calendar.changeView('resourceTimelineWeek');
+            });
+
+            $("#month-button").click(function () {
+                calendar.changeView('dayGridMonth');
+            });
+
+            calendar.render();
+        }
+    });
+
+</script>
+
+
+<partial name="ProviderViews/CreateShiftPartial"></partial>
+
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    // Function to format date to YYYY-MM-DD
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+        let day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+</script>
+<script>
+    // Function to format time to HH:mm
+    function formatTime(dateString) {
+        const date = new Date(dateString);
+        let hours = date.getHours().toString().padStart(2, '0');
+        let minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+</script>
