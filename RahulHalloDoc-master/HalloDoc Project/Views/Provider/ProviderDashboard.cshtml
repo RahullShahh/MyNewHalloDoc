@@ -231,17 +231,191 @@
     </div>
     <div id="partial"></div>
 </div>
+
+@* Transfer Case *@
+<div class="modal fade" id="TransferCaseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-light" id="TransferCaseHeader">Transfer Request</h5>
+                <button type="button" class="btn-close btn-close-white aria-label="Close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="TransferCaseForm">
+                <input hidden id="RequestId" name="RequestId" />
+                <div class="modal-body">
+                    <small class="text-muted">Transfer this request to new tab.</small>
+
+                    <div class="form-floating my-2">
+                        <textarea class="form-control" name="TransferDescription" placeholder="Description" id="transferdescription" style="height: 100px"></textarea>
+                        <label for="description">Description</label>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info text-light" data-bs-dismiss="modal">Submit</button>
+                    <button type="reset" class="btn btn-outline-info">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@* Send Agreement *@
+<div id="SendAgreementModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white" id="exampleModalLongTitle">Send Agreement</h5>
+                <a data-bs-dismiss="modal">
+                    <svg height="20px" id="Layer_1" style="enable-background:new 0 0 512 512;" fill="white" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M443.6,387.1L312.4,255.4l131.5-130c5.4-5.4,5.4-14.2,0-19.6l-37.4-37.6c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4  L256,197.8L124.9,68.3c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4L68,105.9c-5.4,5.4-5.4,14.2,0,19.6l131.5,130L68.4,387.1  c-2.6,2.6-4.1,6.1-4.1,9.8c0,3.7,1.4,7.2,4.1,9.8l37.4,37.6c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1L256,313.1l130.7,131.1  c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1l37.4-37.6c2.6-2.6,4.1-6.1,4.1-9.8C447.7,393.2,446.2,389.7,443.6,387.1z" /></svg>
+                </a>
+            </div>
+            <form id="SendAgreementForm" method="post" class="px-3">
+                <input id="SendAgreementRequestId" hidden />
+                <div class="align-items-center d-flex mb-3">
+                    <div class="me-2" style="height:15px; width:15px; border-radius:50%"></div>
+                    <span style="font-size:20px"></span>
+                </div>
+                <small>To send agreement please make sure you are updating the correct contact information below for the responsible party.</small>
+                <div class="modal-flex justify-content-center my-3">
+                    <div class="form-floating mt-3 temp">
+                        <input type="tel" class="form-control inputs border" id="temp" placeholder="Phone Number">
+                        <label for="floatingInput" class="input_labels">Phone Number</label>
+                    </div>
+                    <div class="form-floating mt-3 temp">
+                        <input type="email" class="form-control inputs border" id="Email" placeholder="name@example.com">
+                        <label for="floatingInput" class="input_labels">Your Email</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info text-white" data-bs-dismiss="modal">Send</button>
+                    <button type="reset" class="btn btn-outline-info cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@* Send Link Modal *@
+<div class="modal fade" id="SendLinkModal" tabindex="-1" aria-labelledby="sendLinkModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h2 class="modal-title fs-5" id="sendLinkModalLabel">Send Link to Patient</h2>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="SendLinkForm">
+                <div class="modal-body">
+                    <div class="form-floating my-2">
+                        <input type="text" class="form-control border" id="SendLinkFirstName" placeholder="Firstname">
+                        <label class="text-muted floating-label">Firstname</label>
+                    </div>
+                    <div class="form-floating my-2">
+                        <input type="text" class="form-control border" id="SendLinkLastName" placeholder="Lastname">
+                        <label class="text-muted floating-label">Lastname</label>
+                    </div>
+                    <div class="form-floating my-2">
+                        <input type="email" class="form-control border" id="SendLinkEmail" placeholder="Email">
+                        <label class="text-muted floating-label">Email</label>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="submit" class="btn btn-info text-white">Submit</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@* Open Encounter Form Modal *@
+<div class="modal fade" id="typeOfCareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white" id="exampleModalLongTitle">Select Type of Care</h5>
+                <a data-bs-dismiss="modal" style="cursor:pointer">
+                    <svg height="20px" id="Layer_1" style="enable-background:new 0 0 512 512;" fill="white" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M443.6,387.1L312.4,255.4l131.5-130c5.4-5.4,5.4-14.2,0-19.6l-37.4-37.6c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4  L256,197.8L124.9,68.3c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4L68,105.9c-5.4,5.4-5.4,14.2,0,19.6l131.5,130L68.4,387.1  c-2.6,2.6-4.1,6.1-4.1,9.8c0,3.7,1.4,7.2,4.1,9.8l37.4,37.6c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1L256,313.1l130.7,131.1  c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1l37.4-37.6c2.6-2.6,4.1-6.1,4.1-9.8C447.7,393.2,446.2,389.7,443.6,387.1z" /></svg>
+                </a>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="modal-flex d-flex justify-content-center my-3">
+                        <input id="physicianEncounterRequestId" hidden />
+                        <div class="btn typeOfCareActive typeOfCareBtn border border-1 border-info" onclick="toggle(this)">HouseCall</div>
+                        <a id="houseCallBtn" hidden></a>
+                        <div class="btn ms-2 consult typeOfCareBtn border border-1 border-info" onclick="toggle(this)">Consult</div>
+                        <a id="consultBtn" hidden></a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info text-white" data-bs-dismiss="modal" onclick="redirect()">Continue</button>
+                    <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*HouseCall/Consult Modal*@
+<div class="modal fade" id="typeOfCareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white" id="exampleModalLongTitle">Select Type of Care</h5>
+                <a data-bs-dismiss="modal" style="cursor:pointer">
+                    <svg height="20px" id="Layer_1" style="enable-background:new 0 0 512 512;" fill="white" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M443.6,387.1L312.4,255.4l131.5-130c5.4-5.4,5.4-14.2,0-19.6l-37.4-37.6c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4  L256,197.8L124.9,68.3c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4L68,105.9c-5.4,5.4-5.4,14.2,0,19.6l131.5,130L68.4,387.1  c-2.6,2.6-4.1,6.1-4.1,9.8c0,3.7,1.4,7.2,4.1,9.8l37.4,37.6c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1L256,313.1l130.7,131.1  c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1l37.4-37.6c2.6-2.6,4.1-6.1,4.1-9.8C447.7,393.2,446.2,389.7,443.6,387.1z" /></svg>
+                </a>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="modal-flex d-flex justify-content-center my-3">
+                        <input id="physicianEncounterRequestId" hidden />
+                        <div class="btn typeOfCareActive typeOfCareBtn border border-1 border-info" onclick="toggle(this)">HouseCall</div>
+                        <a id="houseCallBtn" hidden></a>
+                        <div class="btn ms-2 consult typeOfCareBtn border border-1 border-info" onclick="toggle(this)">Consult</div>
+                        <a id="consultBtn" hidden></a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info text-white" data-bs-dismiss="modal" onclick="redirect()">Continue</button>
+                    <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script src="~/lib/jquery/dist/jquery.min.js">
 </script>
+<script>
+    var isMeRequest;
+    function toggle(element) {
+        if (element.classList.contains("typeOfCareBtn")) {
+            isMeRequest = false;
+        }
+        else {
+            isMeRequest = true;
+        }
+        if (!element.classList.contains("typeOfCareActive")) {
+            $("typeOfCareBtn").removeClass("typeOfCareActive");
+            element.classList.add("typeOfCareBtn");
+        }
+    }
+    function redirect() {
+        if (isMeRequest) {
+            document.getElementById("houseCallBtn").click();
+        }
+        else {
+            document.getElementById("consultBtn").click();
+        }
+    }
+</script>
+
 @* the below written script is for calling all the methods in the admin dashboard *@
 <script type="text/javascript">
-    
         $('#selectregion').change(function () {
             var regionid = $(this).val();
             if (regionid != 0) {
                 $.ajax({
                     type: "GET",
-                    url: "/Admin/GetPhysicianForTransfer",
+                    url: "/Provider/GetPhysicianForTransfer",
                     data: { regionid: regionid },
                     success: function (response) {
                         $('#selectphysician').empty();
@@ -253,31 +427,16 @@
                 });
             }
         });
-
-        $('#AssignCaseForm').submit(function (event) {
-            event.preventDefault();
-            $.ajax({
-                url: '/Provider/AcceptCase',
-                type: 'POST',
-                data: { RequestId: $('#RequestId').val(), AssignPhysician: $('#selectphysician').val(), AssignDescription: $('#assigndescription').val() },
-
-                success: function (response) {
-                    window.location.href = "/Provider/ProviderDashboard";
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error submitting form:', error);
-                }
-            });
-        });
+        
         $('#SendLinkForm').submit(function (event) {
             event.preventDefault();
             $.ajax({
-                url: '/Admin/SendLink',
+                url: '/Provider/SendLink',
                 type: 'POST',
                 data: { FirstName: $('#SendLinkFirstName').val(), LastName: $('#SendLinkLastName').val(), Email: $('#SendLinkEmail').val() },
                 success: function (response) {
                     $('#SendLinkModal').modal('hide');
-                    window.location.href = "/Admin/AdminDashboard";
+                    window.location.href = "/Provider/ProviderDashboard";
                 },
                 error: function (xhr, status, error) {
                     console.error('Error submitting form:', error);
@@ -288,93 +447,93 @@
             event.preventDefault();
 
             $.ajax({
-                url: '/Admin/SendAgreement',
+                url: '/Provider/SendAgreement',
                 type: 'POST',
                 data: { RequestId: $('#SendAgreementRequestId').val(), PhoneNo: $('#temp').val(), email: $('#Email').val() },
 
                 success: function (response) {
                     $('#SendAgreementModal').modal('hide');
-                    window.location.href = "/Admin/AdminDashboard";
+                    window.location.href = "/Provider/ProviderDashboard";
                 },
                 error: function (xhr, status, error) {
                     console.error('Error submitting form:', error);
                 }
             });
         });
-        $('#ConfirmCancellationForm').submit(function (event) {
-            event.preventDefault();
+        // $('#ConfirmCancellationForm').submit(function (event) {
+        //     event.preventDefault();
 
-            var formdata = $(this).serialize();
-            console.log(formdata);
+        //     var formdata = $(this).serialize();
+        //     console.log(formdata);
 
-            $.ajax({
-                url: '/Admin/CancelCase',
-                type: 'POST',
-                data: { requestid: $('#requestid').val(), Reason: $('#cancelreason').val(), Description: $('#canceldescription').val() },
+        //     $.ajax({
+        //         url: '/Admin/CancelCase',
+        //         type: 'POST',
+        //         data: { requestid: $('#requestid').val(), Reason: $('#cancelreason').val(), Description: $('#canceldescription').val() },
 
-                success: function (response) {
-                    $('#ConfirmCancellationModal').modal('hide');
-                    window.location.href = "/Admin/AdminDashboard";
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error submitting form:', error);
-                }
-            });
-        });
-        $('#BlockCaseForm').submit(function (event) {
-            event.preventDefault();
+        //         success: function (response) {
+        //             $('#ConfirmCancellationModal').modal('hide');
+        //             window.location.href = "/Admin/AdminDashboard";
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.error('Error submitting form:', error);
+        //         }
+        //     });
+        // });
+        // $('#BlockCaseForm').submit(function (event) {
+        //     event.preventDefault();
 
-            var formdata = $(this).serialize();
-            console.log(formdata);
+        //     var formdata = $(this).serialize();
+        //     console.log(formdata);
 
-            $.ajax({
-                url: '/Admin/BlockCase',
-                type: 'POST',
-                data: { requestid: $('#RequestID').val(), blocknotes: $('#blockrequest').val() },
+        //     $.ajax({
+        //         url: '/Admin/BlockCase',
+        //         type: 'POST',
+        //         data: { requestid: $('#RequestID').val(), blocknotes: $('#blockrequest').val() },
 
-                success: function (response) {
-                    $('#BlockCaseModal').modal('hide');
-                    window.location.href = "/Admin/AdminDashboard";
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error submitting form:', error);
-                }
-            });
-        });
+        //         success: function (response) {
+        //             $('#BlockCaseModal').modal('hide');
+        //             window.location.href = "/Admin/AdminDashboard";
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.error('Error submitting form:', error);
+        //         }
+        //     });
+        // });
         $('#TransferCaseForm').submit(function (event) {
             event.preventDefault();
 
             $.ajax({
-                url: '/Admin/TransferCase',
+                url: '/Provider/TransferCase',
                 type: 'POST',
                 data: { RequestId: $('#RequestId').val(), TransferPhysician: $('#selectphysiciantransfer').val(), TransferDescription: $('#transferdescription').val() },
 
                 success: function (response) {
                     $('#TransferCaseModal').modal('hide');
-                    window.location.href = "/Admin/AdminDashboard";
+                    window.location.href = "/Provider/ProviderDashboard";
                 },
                 error: function (xhr, status, error) {
                     console.error('Error submitting form:', error);
                 }
             });
         });
-        $('#clear-modal-submit-btn').on('click', function (e) {
-            e.preventDefault();
-            console.log('cancel cancel cancel');
 
-            $.ajax({
-                url: "/Admin/ClearCaseModal",
-                data: { requestid: $('#clearCaseId').val() },
-                type: 'POST',
-                success: function (result) {
-                    location.reload();
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert('Error Cancelling Request')
-                },
-            });
-        });
+        // $('#clear-modal-submit-btn').on('click', function (e) {
+        //     e.preventDefault();
+        //     console.log('cancel cancel cancel');
+        //     $.ajax({
+        //         url: "/Admin/ClearCaseModal",
+        //         data: { requestid: $('#clearCaseId').val() },
+        //         type: 'POST',
+        //         success: function (result) {
+        //             location.reload();
+        //         },
+        //         error: function (error) {
+        //             console.log(error);
+        //             alert('Error Cancelling Request')
+        //         },
+        //     });
+        // });
 
     </script> 
 <script>

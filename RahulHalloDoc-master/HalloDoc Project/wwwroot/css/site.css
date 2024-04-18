@@ -20,5 +20,5 @@ body {
     z-index: 5;
 }
 * {
-    font-family: "Inter"
+    font-family: "Inter"!important;
 }

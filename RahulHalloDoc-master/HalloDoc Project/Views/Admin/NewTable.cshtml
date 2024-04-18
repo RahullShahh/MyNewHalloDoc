@@ -1,6 +1,6 @@
 ﻿@model AdminDashboardViewModel
 <div class="mt-3 table-responsive rounded">
-    <table class="table admin-dashboard-tables shadow-lg d-md-block d-none table-full-width">
+    <table class="table admin-dashboard-tables shadow-lg d-md-table d-none table-full-width">
         <colgroup>
             <col style="width: 17%;">
             <col style="width: 8%;">
@@ -58,8 +58,8 @@
                             </span>
                             @if (Model.adminRequests[i].PhysicianId != null)
                             {
-                                <div class="shadow-lg m-3">
-                                    <button disabled class="btn btn-success p-1 rounded-3">Approved</button>
+                                <div class=" m-3">
+                                    <button class="btn btn-light shadow rounded-pill text-dark">Approved</button>
                                 </div>
                             }
                             <a href="mailto:@Model.adminRequests[i].email">

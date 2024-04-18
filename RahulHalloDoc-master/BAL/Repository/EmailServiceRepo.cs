@@ -4,6 +4,8 @@ using System.Net;
 using DAL.DataContext;
 using DAL.ViewModels;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BAL.Repository
 {
@@ -108,7 +110,7 @@ namespace BAL.Repository
             {
                 From = new MailAddress(_config["EmailCredentials:EmailId"]),
                 Subject = "Subject",
-                Body = "<p>Hello, Mr/Mrs "+firstname+" "+lastname+"</p><a href=\"" + link + "\" >Agreement Link</a>",
+                Body = "<p>Hello, Mr/Mrs "+firstname+" "+lastname+"</p><a href=\"" + link + "\" >Go to Website</a>",
                 IsBodyHtml = true
             };
             mailMessage.To.Add(email);

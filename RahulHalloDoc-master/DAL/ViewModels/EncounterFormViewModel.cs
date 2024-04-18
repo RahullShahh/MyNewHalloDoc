@@ -56,5 +56,6 @@ namespace DAL.ViewModels
         public string? followUps { get; set; }
         public int requestId { get; set; }
         public bool IfExists { get; set; } 
+        public int CallType {  get; set; }
     }
 }

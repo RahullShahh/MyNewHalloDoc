@@ -4,6 +4,7 @@ using DAL.DataContext;
 using DAL.DataModels;
 using DAL.ViewModels;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 
 namespace BAL.Repository
@@ -219,6 +220,30 @@ namespace BAL.Repository
                 _context.SaveChanges();
             }
         }
+        public void ProviderTransferCase(int RequestId, string TransferPhysician, string TransferDescription, int ProviderId)
+        {
+            var req = _context.Requests.FirstOrDefault(h => h.Requestid == RequestId);
+            if (req != null)
+            {
+                req.Status = 1;
+                req.Modifieddate = DateTime.Now;
+                req.Physicianid = null;
+                _context.Update(req);
+                _context.SaveChanges();
+
+                Requeststatuslog requeststatuslog = new()
+                {
+                    Requestid = RequestId,
+                    Notes = TransferDescription,
+                    Createddate = DateTime.Now,
+                    Status = 1,
+                    Physicianid = ProviderId
+                };
+
+                _context.Requeststatuslogs.Add(requeststatuslog);
+                _context.SaveChanges();
+            }
+        }
         public bool ClearCaseModal(int requestid)
         {
             //Admin admin = _context.Admins.GetFirstOrDefault(a => a.Email == AdminEmail);
@@ -266,8 +291,10 @@ namespace BAL.Repository
                 Createddate = DateTime.Now,
                 Vendorid = 1
             };
-            _context.Add(Order);
+            _context.Orderdetails.Add(Order);
             _context.SaveChanges();
+            _notyf.Success("Order Placed Successfully");
+
         }
 
         public CloseCaseViewModel CloseCaseGet(int requestid)
@@ -285,6 +312,7 @@ namespace BAL.Repository
                 RequestwisefileList = files,
                 requestid = requestid,
             };
+            _notyf.Custom("Case Closed");
             return model;
         }
 
@@ -297,7 +325,7 @@ namespace BAL.Repository
             user.Phonenumber = model.phoneno;
             user.Email = model.email;
 
-            _context.Update(user);
+            _context.Requestclients.Update(user);
             _context.SaveChanges();
         }
         public void ChangeRequestStatusToClosed(int requestId)
@@ -373,6 +401,7 @@ namespace BAL.Repository
 
                 _context.Requestclients.Add(rc);
                 _context.SaveChanges();
+                _notyf.Success("New Request Created");
             }
             else
             {
@@ -406,7 +435,10 @@ namespace BAL.Repository
 
                 _context.Requestclients.Add(rc);
                 _context.SaveChanges();
+                _notyf.Success("New Request Created");
+
             }
+
         }
 
         

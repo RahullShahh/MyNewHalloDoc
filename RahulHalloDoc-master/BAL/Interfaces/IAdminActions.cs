@@ -1,4 +1,5 @@
 ﻿using DAL.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BAL.Interfaces
 {
@@ -19,7 +20,8 @@ namespace BAL.Interfaces
         //public void CreateShift(Scheduling model, string email, int physicianId);
         public void ProviderAcceptCase(int requestid);
         public List<EventsViewModel> ListOfEvents();
-        public List<RequestedShiftsViewModel> GetRequestedShifts(string regionid)
-;
+        public List<RequestedShiftsViewModel> GetRequestedShifts(string regionid);
+        public void ProviderTransferCase(int RequestId, string TransferPhysician, string TransferDescription, int providerid);
+
     }
 }

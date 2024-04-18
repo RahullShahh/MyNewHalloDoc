@@ -128,6 +128,8 @@ namespace BAL.Repository
                 EncModel.Medications = check.Medications;
                 EncModel.other = check.Other;
                 EncModel.treatmentPlan = check.TreatmentPlan;
+                EncModel.CallType = (short)user.Request.Calltype ;
+
             }
             return EncModel;
         }

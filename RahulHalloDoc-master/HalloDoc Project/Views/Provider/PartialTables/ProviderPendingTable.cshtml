@@ -1,27 +1,17 @@
 ﻿@model AdminDashboardViewModel
 <div class="table-responsive rounded mt-3">
-    <table class="table admin-dashboard-tables shadow-lg d-md-block d-none">
+    <table class="table admin-dashboard-tables shadow-lg d-md-table d-none">
         <colgroup>
-            <col span="1" style="width: 15%;">
-            <col span="1" style="width: 8%;">
-            <col span="1" style="width: 8%;">
-            <col span="1" style="width: 11%;">
-            <col span="1" style="width: 8%;">
-            <col span="1" style="width: 12%;">
-            <col span="1" style="width: 24%;">
-            <col span="1" style="width: 12%;">
-            <col span="1" style="width: 6%;">
+            <col span="1" style="width: 25%;">
+            <col span="1" style="width: 25%;">
+            <col span="1" style="width: 25%;">
+            <col span="1" style="width: 25%;">
         </colgroup>
         <thead class="table-head align-middle">
             <tr>
                 <th>Name</th>
-                <th>Date Of Birth</th>
-                <th>Requestor</th>
-                <th>Physician name</th>
-                <th>Date Of Service</th>
                 <th>Phone</th>
                 <th>Address</th>
-                <th>Notes</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -70,16 +60,7 @@
                             </a>
                         </div>
                     </td>
-                    <td>
-                        @Model.adminRequests[i].DateOfBirth
-                    </td>
-                    <td>
-                        Concierge @Model.adminRequests[i].Requestor
-                    </td>
-                    <td>
-                        @Model.adminRequests[i].physicianName
-                    </td>
-                    <td>@Model.adminRequests[i].servicedate</td>
+                    
                     <td>
                         <a href="tel:@Model.adminRequests[i].PhoneNo" class="CallPhoneNumber">
                             <div class="white-border-btn px-2 py-1 align-items-center d-flex">
@@ -108,68 +89,61 @@
                         }
                     </td>
                     <td>@Model.adminRequests[i].Address</td>
-                    <td>-</td>
+                    
                     <td>
-                        <div>
-                            <div class="dropdown">
-                                <a class="text-light btn btn-sm" style="border:1px solid white " role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Actions
+
+                        <a class="text-light btn btn-sm" style="border:1px solid white " role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li>
+                                <a class="dropdown-item" onclick="sendAgreement(this)" data-phoneno="@Model.adminRequests[i].PhoneNo" data-email="@Model.adminRequests[i].email" data-requestid="@Model.adminRequests[i].requestid">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+                                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z" />
+                                    </svg>
+                                    Send Agreement
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li>
-                                        <a class="dropdown-item" asp-action="ProviderViewCase" asp-route-requestid="@Model.adminRequests[i].requestid" asp-controller="Admin">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                            </svg>
-                                            View Case
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Admin" asp-action="ViewUploads" asp-route-requestid="@Model.adminRequests[i].requestid">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up" viewBox="0 0 16 16">
-                                                <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707z" />
-                                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
-                                            </svg>
-                                            View Uploads
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                            </svg>
-                                            View Notes
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" data-name="@Model.adminRequests[i].Name" data-requestid="@Model.adminRequests[i].requestid" onclick="transferCase(this)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
-                                                <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
-                                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
-                                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
-                                            </svg>
-                                            Transfer
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" data-name="@Model.adminRequests[i].Name" data-requestid="@Model.adminRequests[i].requestid" onclick="clearCase(this)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ban" viewBox="0 0 16 16">
-                                                <path d="M15 8a6.97 6.97 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
-                                            </svg>
-                                            Clear case
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" onclick="sendAgreement(this)" data-phoneno="@Model.adminRequests[i].PhoneNo" data-email="@Model.adminRequests[i].email" data-requestid="@Model.adminRequests[i].requestid">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
-                                                <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z" />
-                                            </svg>
-                                            Send Agreement
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="ProviderViewCase" asp-route-requestid="@Model.adminRequests[i].requestid" asp-controller="Provider">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                    </svg>
+                                    View Case
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" asp-controller="Provider" asp-action="ViewUploads" asp-route-requestid="@Model.adminRequests[i].requestid">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up" viewBox="0 0 16 16">
+                                        <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707z" />
+                                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                                    </svg>
+                                    View Uploads
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="ProviderViewNotes" asp-controller="Provider">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+                                        <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
+                                        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                                        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+                                    </svg>
+                                    View Notes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" data-name="@Model.adminRequests[i].Name" data-requestid="@Model.adminRequests[i].requestid" onclick="transferCase(this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+                                        <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
+                                        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                                        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+                                    </svg>
+                                    Transfer
+                                </a>
+                            </li>
+                        </ul>
+
                     </td>
                 </tr>
             }
@@ -262,7 +236,7 @@
                 </button>
                 <div id="collapse_@i" class="accordion-collapse collapse border-top border-secondary" data-bs-parent="#accordionExample">
                     <div class="accordion-body position-relative">
-                        <a asp-action="ViewCase" asp-route-requestid="@Model.adminRequests[i].requestid" asp-controller="Admin" asp-route-status="@Model.adminRequests[i].status">
+                        <a asp-action="ViewCase" asp-route-requestid="@Model.adminRequests[i].requestid" asp-controller="Provider" asp-route-status="@Model.adminRequests[i].status">
                             <button class="btn btn-secondary rounded-pill position-absolute rounded-4 border-1 border-dark" style="top: -18px; right: 25px;">
                                 View Case
                             </button>
