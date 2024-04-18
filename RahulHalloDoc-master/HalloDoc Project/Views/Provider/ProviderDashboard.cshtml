@@ -137,7 +137,7 @@
 
         </div>
 
-        
+
 
     </div>
     <div class="d-flex mt-3 align-items-center justify-content-between ">
@@ -175,20 +175,6 @@
                         </path>
                     </svg>
                     <input id="searchBtn" type="text" class="form-control border-0" placeholder="Search Patients">
-                </div>
-
-                <div class="d-flex  normal-input rounded align-items-center ms-2 ps-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50">
-                        <path d="M 21 3 C 11.654545 3 4 10.654545 4 20 C 4 29.345455 11.654545 37 21 37 C 24.701287 37 28.127393 35.786719 30.927734 33.755859 L 44.085938 46.914062 L 46.914062 44.085938 L 33.875 31.046875 C 36.43682 28.068316 38 24.210207 38 20 C 38 10.654545 30.345455 3 21 3 z M 21 5 C 29.254545 5 36 11.745455 36 20 C 36 28.254545 29.254545 35 21 35 C 12.745455 35 6 28.254545 6 20 C 6 11.745455 12.745455 5 21 5 z">
-                        </path>
-                    </svg>
-                    <select id="RegionFilters" class="form-select border-0" aria-label="Default select example">
-                        <option selected>All Regions</option>
-                        @for (int i = 0; i < Model.regions.Count; i++)
-                        {
-                        <option value="@Model.regions[i].Regionid">@Model.regions[i].Name</option>
-                        }
-                    </select>
                 </div>
             </div>
 
@@ -355,35 +341,51 @@
     </div>
 </div>
 @*HouseCall/Consult Modal*@
-<div class="modal fade" id="typeOfCareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="TreatmentTypeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title text-white" id="exampleModalLongTitle">Select Type of Care</h5>
-                <a data-bs-dismiss="modal" style="cursor:pointer">
-                    <svg height="20px" id="Layer_1" style="enable-background:new 0 0 512 512;" fill="white" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M443.6,387.1L312.4,255.4l131.5-130c5.4-5.4,5.4-14.2,0-19.6l-37.4-37.6c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4  L256,197.8L124.9,68.3c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4L68,105.9c-5.4,5.4-5.4,14.2,0,19.6l131.5,130L68.4,387.1  c-2.6,2.6-4.1,6.1-4.1,9.8c0,3.7,1.4,7.2,4.1,9.8l37.4,37.6c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1L256,313.1l130.7,131.1  c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1l37.4-37.6c2.6-2.6,4.1-6.1,4.1-9.8C447.7,393.2,446.2,389.7,443.6,387.1z" /></svg>
-                </a>
+                <h5 class="modal-title text-light" id="exampleModalLongTitle">Encounter Form -> FINALIZED</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form>
+            <form id="treatmentTypeForm">
                 <div class="modal-body">
-                    <div class="modal-flex d-flex justify-content-center my-3">
-                        <input id="physicianEncounterRequestId" hidden />
-                        <div class="btn typeOfCareActive typeOfCareBtn border border-1 border-info" onclick="toggle(this)">HouseCall</div>
-                        <a id="houseCallBtn" hidden></a>
-                        <div class="btn ms-2 consult typeOfCareBtn border border-1 border-info" onclick="toggle(this)">Consult</div>
-                        <a id="consultBtn" hidden></a>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button class="btn btn-outline-info treatmentTypeButton" onclick="SelectTreatmentType(this)" value="1">HouseCall</button>
+                        <button class="btn btn-outline-info treatmentTypeButton" onclick="SelectTreatmentType(this)" value="2">Consult</button>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info text-white" data-bs-dismiss="modal" onclick="redirect()">Continue</button>
-                    <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-info">Save</button>
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script src="~/lib/jquery/dist/jquery.min.js">
-</script>
+<!-- Finalize Modal -->
+<div class="modal fade" id="FinalizedFormModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-light" id="exampleModalLongTitle">Encounter Form -> FINALIZED</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Your Medical Report has been finalized by your Provider.
+                Download the report from below given source.
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end">
+                    <a class="btn-info text-end text-light btn" id="DownloadFinalizePDF">Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     var isMeRequest;
     function toggle(element) {
@@ -410,361 +412,361 @@
 
 @* the below written script is for calling all the methods in the admin dashboard *@
 <script type="text/javascript">
-        $('#selectregion').change(function () {
-            var regionid = $(this).val();
-            if (regionid != 0) {
-                $.ajax({
-                    type: "GET",
-                    url: "/Provider/GetPhysicianForTransfer",
-                    data: { regionid: regionid },
-                    success: function (response) {
-                        $('#selectphysician').empty();
-                        console.log(response.FirstName)
-                        $.each(response, function (index, item) {
-                            $('#selectphysician').append($('<option>').text(item.firstname).attr('value', item.physicianid));
-                        });
-                    }
-                });
+    $('#selectregion').change(function () {
+        var regionid = $(this).val();
+        if (regionid != 0) {
+            $.ajax({
+                type: "GET",
+                url: "/Provider/GetPhysicianForTransfer",
+                data: { regionid: regionid },
+                success: function (response) {
+                    $('#selectphysician').empty();
+                    console.log(response.FirstName)
+                    $.each(response, function (index, item) {
+                        $('#selectphysician').append($('<option>').text(item.firstname).attr('value', item.physicianid));
+                    });
+                }
+            });
+        }
+    });
+
+    $('#SendLinkForm').submit(function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/Provider/SendLink',
+            type: 'POST',
+            data: { FirstName: $('#SendLinkFirstName').val(), LastName: $('#SendLinkLastName').val(), Email: $('#SendLinkEmail').val() },
+            success: function (response) {
+                $('#SendLinkModal').modal('hide');
+                window.location.href = "/Provider/ProviderDashboard";
+            },
+            error: function (xhr, status, error) {
+                console.error('Error submitting form:', error);
             }
         });
-        
-        $('#SendLinkForm').submit(function (event) {
-            event.preventDefault();
-            $.ajax({
-                url: '/Provider/SendLink',
-                type: 'POST',
-                data: { FirstName: $('#SendLinkFirstName').val(), LastName: $('#SendLinkLastName').val(), Email: $('#SendLinkEmail').val() },
-                success: function (response) {
-                    $('#SendLinkModal').modal('hide');
-                    window.location.href = "/Provider/ProviderDashboard";
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error submitting form:', error);
-                }
-            });
-        })
-        $('#SendAgreementForm').submit(function (event) {
-            event.preventDefault();
+    })
+    $('#SendAgreementForm').submit(function (event) {
+        event.preventDefault();
 
-            $.ajax({
-                url: '/Provider/SendAgreement',
-                type: 'POST',
-                data: { RequestId: $('#SendAgreementRequestId').val(), PhoneNo: $('#temp').val(), email: $('#Email').val() },
+        $.ajax({
+            url: '/Provider/SendAgreement',
+            type: 'POST',
+            data: { RequestId: $('#SendAgreementRequestId').val(), PhoneNo: $('#temp').val(), email: $('#Email').val() },
 
-                success: function (response) {
-                    $('#SendAgreementModal').modal('hide');
-                    window.location.href = "/Provider/ProviderDashboard";
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error submitting form:', error);
-                }
-            });
+            success: function (response) {
+                $('#SendAgreementModal').modal('hide');
+                window.location.href = "/Provider/ProviderDashboard";
+            },
+            error: function (xhr, status, error) {
+                console.error('Error submitting form:', error);
+            }
         });
-        // $('#ConfirmCancellationForm').submit(function (event) {
-        //     event.preventDefault();
+    });
+    // $('#ConfirmCancellationForm').submit(function (event) {
+    //     event.preventDefault();
 
-        //     var formdata = $(this).serialize();
-        //     console.log(formdata);
+    //     var formdata = $(this).serialize();
+    //     console.log(formdata);
 
-        //     $.ajax({
-        //         url: '/Admin/CancelCase',
-        //         type: 'POST',
-        //         data: { requestid: $('#requestid').val(), Reason: $('#cancelreason').val(), Description: $('#canceldescription').val() },
+    //     $.ajax({
+    //         url: '/Admin/CancelCase',
+    //         type: 'POST',
+    //         data: { requestid: $('#requestid').val(), Reason: $('#cancelreason').val(), Description: $('#canceldescription').val() },
 
-        //         success: function (response) {
-        //             $('#ConfirmCancellationModal').modal('hide');
-        //             window.location.href = "/Admin/AdminDashboard";
-        //         },
-        //         error: function (xhr, status, error) {
-        //             console.error('Error submitting form:', error);
-        //         }
-        //     });
-        // });
-        // $('#BlockCaseForm').submit(function (event) {
-        //     event.preventDefault();
+    //         success: function (response) {
+    //             $('#ConfirmCancellationModal').modal('hide');
+    //             window.location.href = "/Admin/AdminDashboard";
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Error submitting form:', error);
+    //         }
+    //     });
+    // });
+    // $('#BlockCaseForm').submit(function (event) {
+    //     event.preventDefault();
 
-        //     var formdata = $(this).serialize();
-        //     console.log(formdata);
+    //     var formdata = $(this).serialize();
+    //     console.log(formdata);
 
-        //     $.ajax({
-        //         url: '/Admin/BlockCase',
-        //         type: 'POST',
-        //         data: { requestid: $('#RequestID').val(), blocknotes: $('#blockrequest').val() },
+    //     $.ajax({
+    //         url: '/Admin/BlockCase',
+    //         type: 'POST',
+    //         data: { requestid: $('#RequestID').val(), blocknotes: $('#blockrequest').val() },
 
-        //         success: function (response) {
-        //             $('#BlockCaseModal').modal('hide');
-        //             window.location.href = "/Admin/AdminDashboard";
-        //         },
-        //         error: function (xhr, status, error) {
-        //             console.error('Error submitting form:', error);
-        //         }
-        //     });
-        // });
-        $('#TransferCaseForm').submit(function (event) {
-            event.preventDefault();
+    //         success: function (response) {
+    //             $('#BlockCaseModal').modal('hide');
+    //             window.location.href = "/Admin/AdminDashboard";
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Error submitting form:', error);
+    //         }
+    //     });
+    // });
+    $('#TransferCaseForm').submit(function (event) {
+        event.preventDefault();
 
-            $.ajax({
-                url: '/Provider/TransferCase',
-                type: 'POST',
-                data: { RequestId: $('#RequestId').val(), TransferPhysician: $('#selectphysiciantransfer').val(), TransferDescription: $('#transferdescription').val() },
+        $.ajax({
+            url: '/Provider/TransferCase',
+            type: 'POST',
+            data: { RequestId: $('#RequestId').val(), TransferPhysician: $('#selectphysiciantransfer').val(), TransferDescription: $('#transferdescription').val() },
 
-                success: function (response) {
-                    $('#TransferCaseModal').modal('hide');
-                    window.location.href = "/Provider/ProviderDashboard";
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error submitting form:', error);
-                }
-            });
+            success: function (response) {
+                $('#TransferCaseModal').modal('hide');
+                window.location.href = "/Provider/ProviderDashboard";
+            },
+            error: function (xhr, status, error) {
+                console.error('Error submitting form:', error);
+            }
         });
+    });
 
-        // $('#clear-modal-submit-btn').on('click', function (e) {
-        //     e.preventDefault();
-        //     console.log('cancel cancel cancel');
-        //     $.ajax({
-        //         url: "/Admin/ClearCaseModal",
-        //         data: { requestid: $('#clearCaseId').val() },
-        //         type: 'POST',
-        //         success: function (result) {
-        //             location.reload();
-        //         },
-        //         error: function (error) {
-        //             console.log(error);
-        //             alert('Error Cancelling Request')
-        //         },
-        //     });
-        // });
+    // $('#clear-modal-submit-btn').on('click', function (e) {
+    //     e.preventDefault();
+    //     console.log('cancel cancel cancel');
+    //     $.ajax({
+    //         url: "/Admin/ClearCaseModal",
+    //         data: { requestid: $('#clearCaseId').val() },
+    //         type: 'POST',
+    //         success: function (result) {
+    //             location.reload();
+    //         },
+    //         error: function (error) {
+    //             console.log(error);
+    //             alert('Error Cancelling Request')
+    //         },
+    //     });
+    // });
 
-    </script> 
+</script>
 <script>
-        var pageNo = 1;
-        var dashboardStatus = 0;
-        var type_filter = 0;
-        var region_filter = 0;
-        var search_filter = "";
-        var searchTimer;
+    var pageNo = 1;
+    var dashboardStatus = 0;
+    var type_filter = 0;
+    var region_filter = 0;
+    var search_filter = "";
+    var searchTimer;
 
-        //Pagination And Backend Filters
-        function loadNextPage(currentpage) {
-            LoadPartialTables(currentpage + 1);
-        }
+    //Pagination And Backend Filters
+    function loadNextPage(currentpage) {
+        LoadPartialTables(currentpage + 1);
+    }
 
-        function loadPreviousPage(currentpage) {
-            LoadPartialTables(currentpage - 1);
-        }     
+    function loadPreviousPage(currentpage) {
+        LoadPartialTables(currentpage - 1);
+    }
 
-        $("#searchBtn").on("keydown", function (e) {
+    $("#searchBtn").on("keydown", function (e) {
         if (e.code === "Enter")    //checks whether the pressed key is "Enter"
-            {  
-                var searchValue = $(this).val().toLowerCase();
-                search_filter = searchValue;
-                LoadPartialTables(pageNo);
-            }
-        });
-
-        $("#RegionFilters").change(function () {
-            region_filter = $('option:selected', this).val();
+        {
+            var searchValue = $(this).val().toLowerCase();
+            search_filter = searchValue;
             LoadPartialTables(pageNo);
-        });
-
-        $(".status-tab").click(function () {
-
-            $(this).addClass("active");
-            $(this).children("svg").attr('display', 'block');
-
-            $('.status-tab').not(this).children("svg").attr('display', 'none');
-            $('.status-tab').not(this).removeClass("active");
-
-            var id = $(this).attr('id');
-
-            if (id == 'status-new-tab') {
-                dashboardStatus = 1;
-                status = 1;
-                $('#status-text').text('(New)');
-                $("#status-text").css("color", "#203f9a");
-            }
-            else if (id == 'status-pending-tab') {
-                dashboardStatus = 2;
-                $('#status-text').text('(Pending)');
-                $("#status-text").css("color", "#00adef");
-            }
-            else if (id == 'status-active-tab') {
-                dashboardStatus = 3;
-                $('#status-text').text('(Active)');
-                $("#status-text").css("color", "#228c20");
-            }
-            else if (id == 'status-conclude-tab') {
-                dashboardStatus = 4;
-                $('#status-text').text('(Conclude)');
-                $("#status-text").css("color", "#da0f82");
-            }
-            else if (id == 'status-toclose-tab') {
-                dashboardStatus = 5;
-                $('#status-text').text('(To Close)');
-                $("#status-text").css("color", "#0370d7");
-            }
-            else if (id == 'status-unpaid-tab') {
-                dashboardStatus = 6;
-                $('#status-text').text('(Unpaid)');
-                $("#status-text").css("color", "#9966cd");
-            }
-            LoadPartialTables(pageNo);
-            console.log(dashboardStatus);
-        });
-
-        $('.filter-options').click(function () {
-
-            $(this).addClass("active-filter");
-            $('.filter-options').not(this).removeClass("active-filter");
-
-            var id = $(this).attr('id');
-
-            if (id == 'NoFilter') {
-                type_filter = 0;
-            }
-            else if (id == 'PatientFilter') {
-                type_filter = 2;
-            }
-            else if (id == 'FamilyFriendFilter') {
-                type_filter = 3;
-            }
-            else if (id == 'BusinessFilter') {
-                type_filter = 1;
-            }
-            else if (id == 'ConciergeFilter') {
-                type_filter = 4;
-            }
-            else if (id == 'VipFilter') {
-                type_filter = 5;
-            }
-            console.log(type_filter);
-            LoadPartialTables(pageNo);
-        });
-
-        function LoadPartialTables(pageNo) {
-
-            if (dashboardStatus == 1) {
-                $.ajax({
-                    url: '/Provider/GetNewTable',
-                    type: 'POST',
-                    data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
-                    success: function (data) {
-                        $("#partial").html(data);
-                    },
-                    error: function (error) {
-                        alert('new error');
-                    }
-                });
-            }
-            else if (dashboardStatus == 2) {
-                $.ajax({
-                    url: '/Provider/GetPendingTable',
-                    type: 'POST',
-                    data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
-                    success: function (data) {
-                        $("#partial").html(data);
-                    },
-                    error: function (error) {
-                        alert('active error');
-                    }
-                });
-            }
-            else if (dashboardStatus == 3) {
-                $.ajax({
-                    url: '/Provider/GetActiveTable',
-                    type: 'POST',
-                    data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
-                    success: function (data) {
-                        $("#partial").html(data);
-                    },
-                    error: function (error) {
-                        alert('pending error');
-                    }
-                });
-            }
-            else if (dashboardStatus == 4) {
-                $.ajax({
-                    url: '/Provider/GetConcludeTable',
-                    type: 'POST',
-                    data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
-                    success: function (data) {
-                        $("#partial").html(data);
-                    },
-                    error: function (error) {
-                        alert('pending error');
-                    }
-                });
-            }
         }
-        $(document).ready(function () {
-            $("#status-new-tab").click();
-            $("#dashboard-tab").click();
-        });
-        function acceptCase(link) {
-            var request_id = link.getAttribute("data-requestid");
-            document.getElementById('RequestId').value = request_id;
+    });
+
+    $("#RegionFilters").change(function () {
+        region_filter = $('option:selected', this).val();
+        LoadPartialTables(pageNo);
+    });
+
+    $(".status-tab").click(function () {
+
+        $(this).addClass("active");
+        $(this).children("svg").attr('display', 'block');
+
+        $('.status-tab').not(this).children("svg").attr('display', 'none');
+        $('.status-tab').not(this).removeClass("active");
+
+        var id = $(this).attr('id');
+
+        if (id == 'status-new-tab') {
+            dashboardStatus = 1;
+            status = 1;
+            $('#status-text').text('(New)');
+            $("#status-text").css("color", "#203f9a");
         }
-        function sendAgreement(link) {
-            console.log('console hit')
-            var phoneno = link.getAttribute("data-phoneno");
-            document.getElementById('temp').value = phoneno
-
-            var email = link.getAttribute("data-email");
-            document.getElementById('Email').value = email
-
-            var requestid = link.getAttribute("data-requestid");
-            document.getElementById('SendAgreementRequestId').value = requestid
-
-            $('#SendAgreementModal').modal('show');
+        else if (id == 'status-pending-tab') {
+            dashboardStatus = 2;
+            $('#status-text').text('(Pending)');
+            $("#status-text").css("color", "#00adef");
         }
-        function cancelCase(link) {
-
-            var request_id = link.getAttribute("data-Requestid");
-            document.getElementById('requestid').value = request_id;
-
-            var name = link.getAttribute("data-Name");
-            document.getElementById('clientname').textContent = name;
-
-            $('#ConfirmCancellationModal').modal('show');
+        else if (id == 'status-active-tab') {
+            dashboardStatus = 3;
+            $('#status-text').text('(Active)');
+            $("#status-text").css("color", "#228c20");
         }
-        function clearCase(link) {
-            var request_id = link.getAttribute("data-requestid");
-            document.getElementById('clearCaseId').value = request_id;
-
-            $('#ClearCaseModal').modal('show');
+        else if (id == 'status-conclude-tab') {
+            dashboardStatus = 4;
+            $('#status-text').text('(Conclude)');
+            $("#status-text").css("color", "#da0f82");
         }
-        function blockCase(link) {
-            var request_id = link.getAttribute("data-requestiD");
-            document.getElementById('RequestID').value = request_id;
-
-            var name = link.getAttribute("data-namE");
-            document.getElementById('displayname').textContent = name;
-            $('#BlockCaseModal').modal('show');
+        else if (id == 'status-toclose-tab') {
+            dashboardStatus = 5;
+            $('#status-text').text('(To Close)');
+            $("#status-text").css("color", "#0370d7");
         }
-        // Request Support opening code
-        function RequestSupport(link) {
-            $('#RequestSupportModal').modal('show');
+        else if (id == 'status-unpaid-tab') {
+            dashboardStatus = 6;
+            $('#status-text').text('(Unpaid)');
+            $("#status-text").css("color", "#9966cd");
         }
-        function transferCase(link) {
-            var request_id = link.getAttribute("data-requestid");
-            document.getElementById('RequestId').value = request_id;
+        LoadPartialTables(pageNo);
+        console.log(dashboardStatus);
+    });
 
-            $('#TransferCaseModal').modal('show');
+    $('.filter-options').click(function () {
+
+        $(this).addClass("active-filter");
+        $('.filter-options').not(this).removeClass("active-filter");
+
+        var id = $(this).attr('id');
+
+        if (id == 'NoFilter') {
+            type_filter = 0;
         }
-        function SendLinkModal(link) {
-
-            $('#SendLinkModal').modal('show');
+        else if (id == 'PatientFilter') {
+            type_filter = 2;
         }
-        
-        $(".status-tab").click(function () {
-            $(this).addClass("active");
-            $(this).children("svg").attr('display', 'block');
+        else if (id == 'FamilyFriendFilter') {
+            type_filter = 3;
+        }
+        else if (id == 'BusinessFilter') {
+            type_filter = 1;
+        }
+        else if (id == 'ConciergeFilter') {
+            type_filter = 4;
+        }
+        else if (id == 'VipFilter') {
+            type_filter = 5;
+        }
+        console.log(type_filter);
+        LoadPartialTables(pageNo);
+    });
 
-            $('.status-tab').not(this).children("svg").attr('display', 'none');
-            $('.status-tab').not(this).removeClass("active");
-        });
+    function LoadPartialTables(pageNo) {
 
-    </script> 
+        if (dashboardStatus == 1) {
+            $.ajax({
+                url: '/Provider/GetNewTable',
+                type: 'POST',
+                data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
+                success: function (data) {
+                    $("#partial").html(data);
+                },
+                error: function (error) {
+                    alert('new error');
+                }
+            });
+        }
+        else if (dashboardStatus == 2) {
+            $.ajax({
+                url: '/Provider/GetPendingTable',
+                type: 'POST',
+                data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
+                success: function (data) {
+                    $("#partial").html(data);
+                },
+                error: function (error) {
+                    alert('active error');
+                }
+            });
+        }
+        else if (dashboardStatus == 3) {
+            $.ajax({
+                url: '/Provider/GetActiveTable',
+                type: 'POST',
+                data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
+                success: function (data) {
+                    $("#partial").html(data);
+                },
+                error: function (error) {
+                    alert('pending error');
+                }
+            });
+        }
+        else if (dashboardStatus == 4) {
+            $.ajax({
+                url: '/Provider/GetConcludeTable',
+                type: 'POST',
+                data: { page: pageNo, region: region_filter, search: search_filter, type: type_filter },
+                success: function (data) {
+                    $("#partial").html(data);
+                },
+                error: function (error) {
+                    alert('pending error');
+                }
+            });
+        }
+    }
+    $(document).ready(function () {
+        $("#status-new-tab").click();
+        $("#dashboard-tab").click();
+    });
+    function acceptCase(link) {
+        var request_id = link.getAttribute("data-requestid");
+        document.getElementById('RequestId').value = request_id;
+    }
+    function sendAgreement(link) {
+        console.log('console hit')
+        var phoneno = link.getAttribute("data-phoneno");
+        document.getElementById('temp').value = phoneno
+
+        var email = link.getAttribute("data-email");
+        document.getElementById('Email').value = email
+
+        var requestid = link.getAttribute("data-requestid");
+        document.getElementById('SendAgreementRequestId').value = requestid
+
+        $('#SendAgreementModal').modal('show');
+    }
+    function cancelCase(link) {
+
+        var request_id = link.getAttribute("data-Requestid");
+        document.getElementById('requestid').value = request_id;
+
+        var name = link.getAttribute("data-Name");
+        document.getElementById('clientname').textContent = name;
+
+        $('#ConfirmCancellationModal').modal('show');
+    }
+    function clearCase(link) {
+        var request_id = link.getAttribute("data-requestid");
+        document.getElementById('clearCaseId').value = request_id;
+
+        $('#ClearCaseModal').modal('show');
+    }
+    function blockCase(link) {
+        var request_id = link.getAttribute("data-requestiD");
+        document.getElementById('RequestID').value = request_id;
+
+        var name = link.getAttribute("data-namE");
+        document.getElementById('displayname').textContent = name;
+        $('#BlockCaseModal').modal('show');
+    }
+    // Request Support opening code
+    function RequestSupport(link) {
+        $('#RequestSupportModal').modal('show');
+    }
+    function transferCase(link) {
+        var request_id = link.getAttribute("data-requestid");
+        document.getElementById('RequestId').value = request_id;
+
+        $('#TransferCaseModal').modal('show');
+    }
+    function SendLinkModal(link) {
+
+        $('#SendLinkModal').modal('show');
+    }
+
+    $(".status-tab").click(function () {
+        $(this).addClass("active");
+        $(this).children("svg").attr('display', 'block');
+
+        $('.status-tab').not(this).children("svg").attr('display', 'none');
+        $('.status-tab').not(this).removeClass("active");
+    });
+
+</script>
 <script>
     $('.admin-tab').removeClass('active-tab');
     $('#dashboard-tab').addClass('active-tab');

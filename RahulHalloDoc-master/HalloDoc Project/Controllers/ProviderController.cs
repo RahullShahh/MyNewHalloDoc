@@ -189,6 +189,39 @@ namespace HalloDoc_Project.Controllers
         }
         #endregion
 
+        #region CONCLUDE CARE
+        public IActionResult ConcludeCareDeleteFile(int fileid, int requestid)
+        {
+            var fileRequest = _context.Requestwisefiles.FirstOrDefault(x => x.Requestwisefileid == fileid);
+            fileRequest.Isdeleted = true;
+
+            _context.Requestwisefiles.Update(fileRequest);
+            _context.SaveChanges();
+
+            return RedirectToAction("ActionViews/ProviderConcludeCare", new { requestid = requestid });
+        }
+        public IActionResult ProviderConcludeCare(int requestid)
+        {
+
+            var user = _context.Requests.FirstOrDefault(r => r.Requestid == requestid);
+            var requestFile = _context.Requestwisefiles.Where(r => r.Requestid == requestid).ToList();
+            var requests = _context.Requests.FirstOrDefault(r => r.Requestid == requestid);
+            //var encounterform = _context.Encounterforms.FirstOrDefault(r=>r.Requestid==requestid);
+
+            ViewUploadsViewModel uploads = new()
+            {
+                ConfirmationNo = requests.Confirmationnumber,
+                Patientname = user.Firstname + " " + user.Lastname,
+                RequestID = requestid,
+                Requestwisefiles = requestFile,
+                //isFinalized = encounterform.Isfinalize
+            };
+            
+            return View("ActionViews/ProviderConcludeCare", uploads);
+        }
+
+        #endregion
+
         #region View Uploads 
         public IActionResult DeleteFile(int fileid, int requestid)
         {

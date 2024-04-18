@@ -18,5 +18,7 @@ namespace DAL.ViewModels
         public IFormFile File { get; set;}
         //public DbSet<Requestwisefile> RequestFile { get; set; }
         public List<Request> req { get; set; }
+        public string? ProviderNotes {  get; set; }
+        public bool isFinalized {  get; set; }    
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using BAL.Repository;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using System.Web.Optimization;
+using Microsoft.Extensions.FileProviders.Physical;
 
 namespace HalloDoc_Project.Controllers
 {
@@ -89,7 +90,7 @@ namespace HalloDoc_Project.Controllers
             }
             catch (Exception ex)
             {
-                    return Content("Exception :- " + ex);
+                return Content("Exception :- " + ex);
             }
         }
         [HttpPost]
@@ -108,7 +109,7 @@ namespace HalloDoc_Project.Controllers
                     _context.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _notyf.Error(ex.Message);
             }
@@ -202,11 +203,11 @@ namespace HalloDoc_Project.Controllers
                 }
                 cm.Regions = _context.Regions.ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _notyf.Error(ex.Message);
             }
-            
+
             return View(cm);
         }
         #endregion
@@ -310,19 +311,20 @@ namespace HalloDoc_Project.Controllers
                         var token = _jwtToken.generateJwtToken(v.Email, "Admin");
                         Response.Cookies.Append("jwt", token);
 
-                        TempData["UserName"]=string.Concat(admin.Firstname," ",admin.Lastname ?? " ");
+                        TempData["UserName"] = string.Concat(admin.Firstname, " ", admin.Lastname ?? " ");
                         _notyf.Success("Logged In Successfully");
                         return RedirectToAction("AdminDashboard", "Admin");
                     }
                     else if (v.Role == "Physician")
                     {
-                        Physician physician = _context.Physicians.FirstOrDefault(phy=>phy.Aspnetuserid==v.Id);
-                        if(physician!=null)
+                        Physician physician = _context.Physicians.FirstOrDefault(phy => phy.Aspnetuserid == v.Id);
+                        if (physician != null)
                         {
                             HttpContext.Session.SetString("AspnetuserId", physician.Aspnetuserid);
                             var token = _jwtToken.generateJwtToken(physician.Aspnetuserid, "Physician");
                             Response.Cookies.Append("jwt", token);
 
+                            TempData["UserName"] = physician.Firstname + " " + physician.Lastname ?? " ";
                             _notyf.Success("Logged In Successfully");
                             return RedirectToAction("ProviderDashboard", "Provider");
                         }
